@@ -1,0 +1,26 @@
+body {
+    height: 100%;
+}
+
+canvas {
+    border: 1px solid black;
+}
+
+#simulation {
+    border: 1px solid black;
+}
+
+#container {
+    min-height: 100%;
+    display: flex;
+}
+
+#simulationcontainer {
+    height: 400px;
+    width: 50%;
+}
+
+#chartcontainer {
+    height: 400px;
+    width: 50%;
+}
