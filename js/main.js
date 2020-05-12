@@ -26,6 +26,41 @@ let chartdata;
 
 //init function, gets called when window is resized or resetbutton is pressed
 function init() {
+    //setup the chart
+    chartdata = {
+        type: 'line',
+        data: {
+            //labels: population.daylist,
+            labels: [],
+            datasets: [{
+                label: "Infiziert",
+                //data: population.infectionlist,
+                data: [],
+                backgroundColor: "rgba(255,0,0,0.5)"
+            }, {
+                label: "Gesund",
+                //data: population.healthylist,
+                data: [],
+                backgroundColor: "rgba(0,0,255,0.5)"
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    }
+    linechart = new Chart(cc, chartdata);
+
+    //adjusting the simulation size
+    canvas.style.width ='100%';
+    canvas.style.height='100%';
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
     //setup the simulation
     baseattributes = {
         velocity: 1,
@@ -50,32 +85,10 @@ function init() {
     //initialize the population
     population = new Population(100, communityattributes, baseattributes);
 
-
-    //setup the chart
-    chartdata = {
-        type: 'line',
-        data: {
-            labels: population.daylist,
-            datasets: [{
-                label: "Infiziert",
-                data: population.infectionlist,
-                backgroundColor: "rgba(255,0,0,0.5)"
-            }, {
-                label: "Gesund",
-                data: population.healthylist,
-                backgroundColor: "rgba(0,0,255,0.5)"
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    stacked: true
-                }]
-            }
-        }
-    }
-    linechart = new Chart(cc, chartdata);
+    //set the correct chart data
+    chartdata.data.labels = population.daylist;
+    chartdata.data.datasets[0].data = population.infectionlist;
+    chartdata.data.datasets[1].data = population.healthylist;
 }
 
 //animate function

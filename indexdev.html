@@ -6,21 +6,31 @@
 
     <!--Load in all the Helper Libraries-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/fabiobhl/virus-simulation/js/utils.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <script src="js/utils.js"></script>
     
     <!--Load in the stylingsheet-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fabiobhl/virus-simulation/styles.css" type="text/css"></link>
+    <link rel="stylesheet" href="styles.css" type="text/css"></link>
   </head>
-  <body>
-    <div id="container">
-      <div id="simulationcontainer">
-        <canvas width="400px" height="400px" id="simulation"></canvas>
-      </div>
-      <div id="chartcontainer">
-        <canvas id="chart"></canvas>
-      </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/gh/fabiobhl/virus-simulation/js/simulation.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/fabiobhl/virus-simulation/js/main.js"></script>
-  </body>
+
+    <body>
+        <div class="grid">
+            <div class="simulationcontainer">
+                <canvas id="simulation"></canvas>
+            </div>
+            <div class="chartcontainer">
+                <canvas id="chart"></canvas>
+            </div>
+            <div class="optionscontainer">
+                <div class="optionelement">
+                    <p>Infektionsrate</p>
+                    <input type="range" id="infectionrateSlider" name="Infectionrate" min="0" max="20", value="1" step="0.01">
+                </div>
+                <input type="button" value="Reset" id="resetButton">
+            </div>
+        </div>
+
+        <script src="js/simulation.js"></script>
+        <script src="js/main.js"></script>
+    </body>
 </html>
