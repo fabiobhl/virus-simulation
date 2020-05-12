@@ -1,8 +1,20 @@
+//most basic options
+let popsize = 800;
+
 //chart setup
 let chart = document.getElementById('chart');
 let cc = chart.getContext('2d');
 
-//init function, gets called when window is resized or resetbutton is pressed
+//setup the buttons
+let resetButton = document.getElementById('resetButton');
+let infectionrateSlider = document.getElementById('infectionrateSlider');
+
+//this funtion gets all the options from the menu and inserts them into code
+function getinfo(baseattributes, communityattributes) {
+    //get the infectionrate
+    baseattributes.infectionrate = infectionrateSlider.value/1000;
+}
+
 //init the simulation variables
 let population;
 let baseattributes;
@@ -12,6 +24,7 @@ let communityattributes;
 let linechart;
 let chartdata;
 
+//init function, gets called when window is resized or resetbutton is pressed
 function init() {
     //setup the simulation
     baseattributes = {
@@ -31,6 +44,10 @@ function init() {
         hasstartinfections: [false],
         startinfectionamount: [0.01]
     };
+
+    //get the info from the menu
+    getinfo(baseattributes, communityattributes);
+    //initialize the population
     population = new Population(100, communityattributes, baseattributes);
 
 
@@ -40,11 +57,11 @@ function init() {
         data: {
             labels: population.daylist,
             datasets: [{
-                label: "Infections",
+                label: "Infiziert",
                 data: population.infectionlist,
                 backgroundColor: "rgba(255,0,0,0.5)"
             }, {
-                label: "Healthy",
+                label: "Gesund",
                 data: population.healthylist,
                 backgroundColor: "rgba(0,0,255,0.5)"
             }]
@@ -69,6 +86,9 @@ function animate() {
     population.update();
     linechart.update();
 }
+
+//attach all eventlisteners
+resetButton.addEventListener('click', init);
 
 init();
 animate();

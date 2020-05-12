@@ -78,3 +78,9 @@ function border(communityattributes, index, padding, canvas) {
         
     }
 }
+
+//returns a random sign
+function randomsign() {
+    let a = [-1,1];
+    return a[Math.floor(Math.random()*2)];
+}

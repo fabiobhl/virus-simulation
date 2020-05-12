@@ -13,8 +13,8 @@ class Particle {
         this.x = x; //The current x-Position relative to the upper right corner
         this.y = y; //The current y-Position relative to the upper left corner
         this.baseattributes = baseattributes; //The Baseattributes every Particle has the same
-        this.velocity = {x: (Math.random()-0.5) * this.baseattributes.velocity}; //The velocity of the Particle in [Pixels per Refresh]
-        this.velocity.y = Math.sqrt(Math.pow(this.baseattributes.velocity, 2) - Math.pow(this.velocity.x, 2));
+        this.velocity = {x: (Math.random()-0.5) * 2 * this.baseattributes.velocity}; //The velocity of the Particle in [Pixels per Refresh]
+        this.velocity.y = randomsign() * Math.sqrt(Math.pow(this.baseattributes.velocity, 2) - Math.pow(this.velocity.x, 2));
 
         //Infection specific states of the particle
         this.infected = infected; //The infectionstate of the particle
