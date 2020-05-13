@@ -78,8 +78,9 @@ function init() {
     //setup the simulation
     //determine the radius (mobile/desktop)
     let radius = canvas.width/80;
+    let velocity = canvas.width/400;
     baseattributes = {
-        velocity: 1,
+        velocity: velocity,
         radius: radius,
         basecolor: "#9AC4F8",
         incubationcolor: "#E3E36A",
