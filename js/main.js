@@ -36,12 +36,12 @@ function init() {
                 label: "Infiziert",
                 //data: population.infectionlist,
                 data: [],
-                backgroundColor: "rgba(255,0,0,0.5)"
+                backgroundColor: "#E34A6F"
             }, {
                 label: "Gesund",
                 //data: population.healthylist,
                 data: [],
-                backgroundColor: "rgba(0,0,255,0.5)"
+                backgroundColor: "#9AC4F8"
             }]
         },
         options: {
@@ -58,17 +58,21 @@ function init() {
     //adjusting the simulation size
     canvas.style.width ='100%';
     canvas.style.height='100%';
+    console.log(canvas.width);
+    console.log(canvas.height);
     canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    console.log(canvas.width);
+    canvas.height = canvas.offsetWidth;
+    console.log(canvas.height);
 
     //setup the simulation
     baseattributes = {
         velocity: 1,
         radius: 5,
-        basecolor: "rgba(0,0,255,1)",
-        incubationcolor: "rgba(0,255,255,1)",
-        infectioncolor: "rgba(255,0,0,1)",
-        healcolor: "rgba(0,255,0,1)",
+        basecolor: "#9AC4F8",
+        incubationcolor: "#E3E36A",
+        infectioncolor: "#E34A6F",
+        healcolor: "#60A561",
         infectionrate: 0.0005,
         deathrate: 0.5,
         incubationtime: 100,

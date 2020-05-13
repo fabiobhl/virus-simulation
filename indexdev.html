@@ -14,14 +14,14 @@
   </head>
 
     <body>
-        <div class="grid">
-            <div class="simulationcontainer">
+        <div class="grid" id="gridcontainer">
+            <div id="simulationcontainer" class="container">
                 <canvas id="simulation"></canvas>
             </div>
-            <div class="chartcontainer">
+            <div id="chartcontainer" class="container">
                 <canvas id="chart"></canvas>
             </div>
-            <div class="optionscontainer">
+            <div id="optionscontainer" class="container">
                 <div class="optionelement">
                     <p>Infektionsrate</p>
                     <input type="range" id="infectionrateSlider" name="Infectionrate" min="0" max="20", value="1" step="0.01">
@@ -29,7 +29,15 @@
                 <input type="button" value="Reset" id="resetButton">
             </div>
         </div>
+        
+        <script>
+            function resize() {
+                document.getElementById('gridcontainer').style.gridAutoRows = document.getElementById('simulationcontainer').offsetWidth.toString() + "px";
+            }
 
+            window.onresize = resize;
+            window.onload = resize;
+        </script>
         <script src="https://raw.githack.com/fabiobhl/virus-simulation/master/js/simulation.js"></script>
         <script src="https://raw.githack.com/fabiobhl/virus-simulation/master/js/main.js"></script>
     </body>
