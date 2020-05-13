@@ -20,6 +20,9 @@ class Particle {
         this.infected = infected; //The infectionstate of the particle
         this.inincubation = infected; //Whether the particle is infected but doesent show any symptoms yet
         this.healed = false; //Wether the particle is healed
+        this.dead = false;
+        this.days = 0;
+        this.infectiondays = 0;
     }
 
     draw() {
@@ -30,6 +33,8 @@ class Particle {
             c.fillStyle = this.baseattributes.incubationcolor;
         } else if (this.healed) {
             c.fillStyle = this.baseattributes.healcolor;
+        } else if (this.dead) {
+            c.fillStyle = this.baseattributes.deathcolor;
         } else {
             c.fillStyle = this.baseattributes.basecolor;
         }
@@ -37,6 +42,24 @@ class Particle {
         c.beginPath();
         c.arc(this.x, this.y, this.baseattributes.radius, 0, Math.PI * 2);
         c.fill();
+    }
+
+    dayupdate() {
+        this.days += 1;
+        if (this.infected &&  !this.dead) {
+            this.infectiondays += 1;
+        }
+
+        if (this.infectiondays >= this.baseattributes.healtime) {
+            this.infected = false;
+            this.inincubation = false;
+            this.healed = true;
+        } else if (this.infectiondays > 0 && probability(this.baseattributes.deathrate)) {
+            this.infected = false;
+            this.inincubation = false;
+            this.healed = false;
+            this.dead = true;
+        }
     }
 }
 
@@ -90,6 +113,28 @@ class Community {
         return counter;
     }
 
+    countdeaths() {
+        let counter = 0;
+        this.particles.forEach(particle => {
+            if (particle.dead) {
+                counter += 1;
+            }
+        });
+
+        return counter;
+    }
+
+    counthealed() {
+        let counter = 0;
+        this.particles.forEach(particle => {
+            if (particle.healed) {
+                counter += 1;
+            }
+        });
+
+        return counter;
+    }
+
     update() { //updates the community
 
         //move the particles
@@ -100,9 +145,13 @@ class Community {
             for (let n=i+1; n < this.particles.length; ++n) {
                 if (getdistance(this.particles[i].x, this.particles[i].y, this.particles[n].x, this.particles[n].y) < this.baseattributes.radius*2) {
                     if (this.particles[i].infected && !this.particles[n].infected) {
-                        this.particles[n].infected = probability(this.baseattributes.infectionrate);
+                        if ((!this.particles[i].dead && !this.particles[n].dead) && (!this.particles[i].healed && !this.particles[n].healed)) {
+                            this.particles[n].infected = probability(this.baseattributes.infectionrate);
+                        }
                     } else if (!this.particles[i].infected && this.particles[n].infected) {
-                        this.particles[i].infected = probability(this.baseattributes.infectionrate);
+                        if ((!this.particles[i].dead && !this.particles[n].dead) && (!this.particles[i].healed && !this.particles[n].healed)) {
+                            this.particles[i].infected = probability(this.baseattributes.infectionrate);
+                        }
                     }
                 }
             }
@@ -121,6 +170,10 @@ class Community {
         c.lineTo(this.xStart, this.yStart);
         c.stroke();
     }
+
+    dayupdate() {
+        this.particles.forEach(particle => {particle.dayupdate()});
+    }
 }
 
 //Represents the whole Population on the screen, contains communities
@@ -132,6 +185,8 @@ class Population {
         this.communityattributes = communityattributes; //Object that contains info for all the communities
         this.clock = 0; //Increases on every refresh
         this.infectioncounter = 0; //How many particles are infected
+        this.deathcounter = 0;
+        this.healedcounter = 0;
         this.dayscount = dayscount; //How many refreshes are a day
         this.dayscounter = 0; //The amount of days being passed
 
@@ -153,6 +208,8 @@ class Population {
         this.infectionlist = [];
         this.healthylist = [];
         this.daylist = [];
+        this.healedlist = [];
+        this.deathlist = [];
 
         //other setups
         this.popsize = this.getpopsize();
@@ -175,21 +232,52 @@ class Population {
         return counter;
     }
 
+    counthealed() {
+        let counter = 0;
+        this.communities.forEach(community => {
+            counter += community.counthealed()
+        });
+
+        return counter;
+    }
+
+    countdeaths() {
+        let counter = 0;
+        this.communities.forEach(community => {
+            counter += community.countdeaths()
+        });
+
+        return counter;
+    }
+
     update() {
         //update the communities
         this.communities.forEach(community => {community.update()});
         
-        
-        //count the infections
-        this.infectioncounter = this.countinfections();
-        
-
         //update the infectionlist/healthylist
         if (this.clock%this.dayscount == 0) {
-            this.infectionlist.push((this.infectioncounter/this.popsize)*100);
-            this.healthylist.push(100-(this.infectioncounter/this.popsize)*100)
+
+            //count the infections
+            this.infectioncounter = this.countinfections();
+
+            //count the deaths
+            this.deathcounter = this.countdeaths();
+
+            //count the healeds
+            this.healedcounter = this.counthealed();
+
+            let infections = (this.infectioncounter/this.popsize)*100;
+            let deaths = (this.deathcounter/this.popsize)*100;
+            let heals = (this.healedcounter/this.popsize)*100;
+            this.infectionlist.push(infections);
+            this.deathlist.push(deaths);
+            this.healedlist.push(heals)
+            this.healthylist.push(100-infections-heals-deaths);
             this.daylist.push(this.dayscounter);
             this.dayscounter += 1;
+            
+            //pass the days down to the communities
+            this.communities.forEach(community => {community.dayupdate()});
         }
 
         //update the clock
