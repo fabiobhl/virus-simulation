@@ -58,17 +58,15 @@ function init() {
     //adjusting the simulation size
     canvas.style.width ='100%';
     canvas.style.height='100%';
-    console.log(canvas.width);
-    console.log(canvas.height);
     canvas.width  = canvas.offsetWidth;
-    console.log(canvas.width);
     canvas.height = canvas.offsetWidth;
-    console.log(canvas.height);
 
     //setup the simulation
+    //determine the radius (mobile/desktop)
+    let radius = canvas.width/80;
     baseattributes = {
         velocity: 1,
-        radius: 5,
+        radius: radius,
         basecolor: "#9AC4F8",
         incubationcolor: "#E3E36A",
         infectioncolor: "#E34A6F",
